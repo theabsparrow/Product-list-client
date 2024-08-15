@@ -6,7 +6,7 @@ import Navbar from "../shared/navbar/Navbar";
 const Layout = () => {
     return (
         <div>
-            <div className="flex justify-between">
+            <div className="flex lg:flex-row flex-col justify-between">
                 <Navbar></Navbar>
                 <Outlet></Outlet>
             </div>
