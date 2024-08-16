@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
-    const {userLogin, setUser, user, setLoading, loading} = UseAuth();
+    const {userLogin, setUser, user, setLoading, loading, loginWithGoogle} = UseAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -17,6 +17,7 @@ const Login = () => {
         }
     }, [navigate, user])
 
+    // login with email and password
     const handleLogin = async (e) => {
         e.preventDefault();
         const userEmail = e.target.email.value;
@@ -37,6 +38,32 @@ const Login = () => {
         catch(error) {
             console.log(error)
             setLoading(false)
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "invalid email or password",
+                footer: '<a href="#">Why do I have this issue?</a>'
+            });
+        }
+    }
+
+    // login with google
+    const handleGoogle = async() => {
+        try {
+            const result = await loginWithGoogle();
+            console.log(result)
+            setUser(result.user);
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Successfully login with google",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+        catch(error) {
+            setLoading(false)
+            console.log(error)
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
@@ -93,7 +120,7 @@ const Login = () => {
 
                     <div className="mt-6">
                         <p className="mt-4 text-center text-lg font-medium">or sign in with</p>
-                        <button className='flex items-center justify-center mt-2 gap-10 text-lg font-medium border-teal-800 shadow-xl border-[1px] w-full px-6 py-3 rounded-xl hover:bg-teal-800 hover:text-white duration-500'>
+                        <button onClick={handleGoogle} className='flex items-center justify-center mt-2 gap-10 text-lg font-medium border-teal-800 shadow-xl border-[1px] w-full px-6 py-3 rounded-xl hover:bg-teal-800 hover:text-white duration-500'>
                             <FcGoogle className='text-xl'></FcGoogle> Sign in with Google
                         </button>
 

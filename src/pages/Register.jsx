@@ -16,7 +16,7 @@ const Register = () => {
     const [displayPass, setDisplayPass] = useState(false);
     const [displayConfirmPass, setDisplayConfirmPass] = useState(false);
     const [disable, setDisable] = useState(true);
-    const { loading, setLoading, user, setUser, createUser, updateUserProfile } = UseAuth();
+    const { loading, setLoading, user, setUser, createUser, updateUserProfile, loginWithGoogle } = UseAuth();
     const [Captcha, setCaptcha] = useState('')
     const [errorCaptcha, setErrorCaptcha] = useState('');
     const navigate = useNavigate();
@@ -47,7 +47,7 @@ const Register = () => {
         const userEmail = data.email;
         const userImage = data.image[0];
         const userPass = data.password;
-       
+
         setErrorPass("")
         if (data.password !== data.confirmPass) {
             setErrorPass('password and confirm Password doesn`t match')
@@ -65,11 +65,11 @@ const Register = () => {
             const image = response.data.data.display_url;
 
 
-             // user register
-             const result = await createUser(userEmail, userPass)
-             setUser(result.user)
-             await updateUserProfile(userName, image)
-             Swal.fire({
+            // user register
+            const result = await createUser(userEmail, userPass)
+            setUser(result.user)
+            await updateUserProfile(userName, image)
+            Swal.fire({
                 position: "top-end",
                 icon: "success",
                 title: "Successfully signed up",
@@ -77,7 +77,7 @@ const Register = () => {
                 timer: 1500
             });
             navigate('/')
-            
+
         } catch (error) {
             console.error("Image upload failed:", error);
             setLoading(false)
@@ -90,8 +90,34 @@ const Register = () => {
         }
     }
 
+    // login with google
+    const handleGoogle = async() => {
+        try {
+            const result = await loginWithGoogle();
+            console.log(result)
+            setUser(result.user);
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Successfully login with google",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+        catch(error) {
+            setLoading(false)
+            console.log(error)
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "invalid email or password",
+                footer: '<a href="#">Why do I have this issue?</a>'
+            });
+        }
+    }
+
     useEffect(() => {
-        if (user ) {
+        if (user) {
             navigate('/')
         }
     }, [navigate, user])
@@ -216,7 +242,7 @@ const Register = () => {
                     <div className="divider divider-success text-teal-800">Social Login</div>
                 </div>
                 <div>
-                    <button className='flex items-center justify-center mt-2 gap-10 text-lg font-medium border-teal-800 shadow-xl border-[1px] w-full px-6 py-2 rounded-xl hover:bg-teal-800 hover:text-white duration-500'>
+                    <button onClick={handleGoogle} className='flex items-center justify-center mt-2 gap-10 text-lg font-medium border-teal-800 shadow-xl border-[1px] w-full px-6 py-2 rounded-xl hover:bg-teal-800 hover:text-white duration-500'>
                         <FcGoogle className='text-xl'></FcGoogle> Sign in with Google
                     </button>
                 </div>

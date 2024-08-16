@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from '../../../public/logo.png'
 import { useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
@@ -7,11 +7,14 @@ import Navmenu from "./Navmenu";
 import { AiOutlineProduct } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
 import { TbLogout2 } from "react-icons/tb";
+import UseAuth from "../../hooks/UseAuth";
+import Swal from "sweetalert2";
 
 const NavMobile = () => {
     const [display, setDisplay] = useState(false);
     const [theme, setTheme] = useState(() => localStorage.getItem("userTheme") || "light");
-
+    const {logout, user} = UseAuth();
+    const navigate = useNavigate();
 
     useEffect(() => {
         localStorage.setItem("userTheme", theme)
@@ -29,6 +32,29 @@ const NavMobile = () => {
         }
     }
 
+    const handleLogout = async() => {
+        try {
+            await logout()
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Log out successfully!",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            navigate("/login")
+        }
+        catch (error) {
+            console.log(error)
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "logout failed",
+                footer: '<a href="#">Why do I have this issue?</a>'
+            });
+        }
+    }
+
     return (
         <div className="font-poppins h-[70px] md:h-[120px] bg-teal-800 px-3 md:py-2">
             <div className="flex justify-between items-center">
@@ -43,7 +69,7 @@ const NavMobile = () => {
                     <Navmenu address={"/my-products"} label={"My Products"} icon={MdAddShoppingCart}></Navmenu>
                     <Navmenu address={"/profile"} label={"My Profile"} icon={CgProfile}></Navmenu>
                     <div className="hover:bg-yellow-500 hover:rounded-xl duration-500">
-                        <button className="flex items-center gap-1 hover:text-[#859770]  text-lg text-white px-3 py-2"> <TbLogout2 className="text-3xl" /> Logout</button>
+                        <button onClick={handleLogout} className="flex items-center gap-1 hover:text-[#859770]  text-lg text-white px-3 py-2"> <TbLogout2 className="text-3xl" /> Logout</button>
                     </div>
                     <div className="flex items-center justify-center gap-2 pl-2 text-yellow-500  font-bold">
                             <span className="text-2xl"><MdLightbulbCircle /></span>
