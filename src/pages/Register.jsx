@@ -156,7 +156,7 @@ const Register = () => {
 
                 <div className="form-control mt-3">
                     <button
-                        // disabled={loading || disable}
+                        disabled={ disable}
                         type="submit"
                         className="btn bg-teal-800 hover:bg-yellow-500 duration-500 text-white text-lg">
                         {/* {loading ? <TbFidgetSpinner className="animate-spin m-auto"></TbFidgetSpinner> : "Sign up"} */}
