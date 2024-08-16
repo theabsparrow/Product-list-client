@@ -7,6 +7,7 @@ import MyProducts from "../pages/MyProducts";
 import MyProfile from "../pages/MyProfile";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import PrivateRoute from "./PrivateRoute";
 
 
 
@@ -17,19 +18,19 @@ export const router = createBrowserRouter([
         children: [
             {
                 path: '/',
-                element: <Home></Home>
+                element: <PrivateRoute><Home></Home></PrivateRoute>
             },
             {
                 path: '/add-product',
-                element: <AddProduct></AddProduct>
+                element: <PrivateRoute><AddProduct></AddProduct></PrivateRoute>
             },
             {
                 path: '/my-products',
-                element: <MyProducts></MyProducts>
+                element: <PrivateRoute><MyProducts></MyProducts></PrivateRoute>
             },
             {
                 path: '/profile',
-                element: <MyProfile></MyProfile>
+                element: <PrivateRoute><MyProfile></MyProfile></PrivateRoute>
             }
         ]
     },

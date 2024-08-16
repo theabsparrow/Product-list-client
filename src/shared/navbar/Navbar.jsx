@@ -15,7 +15,6 @@ const Navbar = () => {
     const {logout, user} = UseAuth();
     const navigate = useNavigate();
 
-
     useEffect(() => {
         localStorage.setItem("userTheme", theme)
         const uiTheme = localStorage.getItem("userTheme")
@@ -82,7 +81,7 @@ const Navbar = () => {
                     </div>
 
                     <div className="space-y-3">
-                        <Navmenu address={"/profile"} label={"My Profile"} icon={CgProfile}></Navmenu>
+                        <Navmenu address={"/profile"} label={"My Profile"} image={user?.photoURL}></Navmenu>
                         <div className="hover:bg-yellow-500 hover:rounded-xl duration-500">
                             <button onClick={handleLogout} className="flex items-center gap-1 hover:text-[#859770]  text-lg text-white px-3 py-2"> <TbLogout2 className="text-3xl" /> Logout</button>
                         </div>
