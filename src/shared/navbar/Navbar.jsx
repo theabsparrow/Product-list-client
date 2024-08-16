@@ -1,15 +1,19 @@
 import { AiOutlineProduct } from "react-icons/ai";
 import Navmenu from "./Navmenu";
 import { MdAddShoppingCart, MdOutlineNoteAdd } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from '../../../public/logo.png'
 import { useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { TbLogout2 } from "react-icons/tb";
 import NavMobile from "./NavMobile";
+import UseAuth from "../../hooks/UseAuth";
+import Swal from "sweetalert2";
 
 const Navbar = () => {
     const [theme, setTheme] = useState(() => localStorage.getItem("userTheme") || "light");
+    const {logout, user} = UseAuth();
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -25,6 +29,29 @@ const Navbar = () => {
         }
         else {
             setTheme("light")
+        }
+    }
+
+    const handleLogout = async() => {
+        try {
+            await logout()
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Log out successfully!",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            navigate("/login")
+        }
+        catch (error) {
+            console.log(error)
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "logout failed",
+                footer: '<a href="#">Why do I have this issue?</a>'
+            });
         }
     }
     return (
@@ -57,7 +84,7 @@ const Navbar = () => {
                     <div className="space-y-3">
                         <Navmenu address={"/profile"} label={"My Profile"} icon={CgProfile}></Navmenu>
                         <div className="hover:bg-yellow-500 hover:rounded-xl duration-500">
-                            <button className="flex items-center gap-1 hover:text-[#859770]  text-lg text-white px-3 py-2"> <TbLogout2 className="text-3xl" /> Logout</button>
+                            <button onClick={handleLogout} className="flex items-center gap-1 hover:text-[#859770]  text-lg text-white px-3 py-2"> <TbLogout2 className="text-3xl" /> Logout</button>
                         </div>
                     </div>
 

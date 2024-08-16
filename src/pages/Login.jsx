@@ -1,11 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { IoEye, IoEyeOff } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from '../../public/logo.png'
+import UseAuth from "../hooks/UseAuth";
+import Swal from "sweetalert2";
 
 const Login = () => {
-    const [showPassword, setShowPassword] = useState(false)
+    const [showPassword, setShowPassword] = useState(false);
+    const {userLogin, setUser, user, setLoading, loading} = UseAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user) {
+            navigate('/')
+        }
+    }, [navigate, user])
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        const userEmail = e.target.email.value;
+        const userPass = e.target.password.value;
+
+        try {
+            const result = await userLogin(userEmail, userPass);
+            setUser(result.user);
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Login successfully!",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            navigate('/')
+        }
+        catch(error) {
+            console.log(error)
+            setLoading(false)
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "invalid email or password",
+                footer: '<a href="#">Why do I have this issue?</a>'
+            });
+        }
+    }
+
+    if (user) {
+        return
+    }
 
     return (
         <div className="min-h-[calc(100vh-466px)] px-4 lg:px-[70px] mt-4 mb-4 font-roboto">
@@ -25,7 +68,7 @@ const Login = () => {
                         </div>
                     </div>
 
-                    <form >
+                    <form onSubmit={handleLogin}>
                         <div className="flex flex-col mt-6">
                             <label className='text-xl font-medium'>Email:</label>
                             <input type="email" name='email' className="block  py-3 border bg-transparent rounded-lg px-5 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="enter your email address" required />

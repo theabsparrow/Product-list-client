@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoEye, IoEyeOff } from "react-icons/io5";
-import { TbFidgetSpinner } from "react-icons/tb";
-import { Link } from "react-router-dom";
+// import { TbFidgetSpinner } from "react-icons/tb";
+import { Link, useNavigate } from "react-router-dom";
 import UseAuth from "../hooks/UseAuth";
 import logo from '../../public/logo.png';
 import { FcGoogle } from "react-icons/fc";
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const Register = () => {
     const { register, handleSubmit, formState: { errors }, } = useForm();
@@ -15,9 +16,10 @@ const Register = () => {
     const [displayPass, setDisplayPass] = useState(false);
     const [displayConfirmPass, setDisplayConfirmPass] = useState(false);
     const [disable, setDisable] = useState(true);
-    const { loading } = UseAuth();
+    const { loading, setLoading, user, setUser, createUser, updateUserProfile } = UseAuth();
     const [Captcha, setCaptcha] = useState('')
-    const [errorCaptcha, setErrorCaptcha] = useState('')
+    const [errorCaptcha, setErrorCaptcha] = useState('');
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -45,31 +47,58 @@ const Register = () => {
         const userEmail = data.email;
         const userImage = data.image[0];
         const userPass = data.password;
-
+       
         setErrorPass("")
         if (data.password !== data.confirmPass) {
             setErrorPass('password and confirm Password doesn`t match')
             return
         }
-
-        // console.log(userName, userEmail, userImage, userPass)
         const formData = new FormData();
         formData.append('image', userImage)
 
         try {
-            const { data } = await axios.post(`
-                https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
+            setLoading(true)
+            const response = await axios.post(
+                `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
                 formData
             );
-            const image = data.data.display_url
+            const image = response.data.data.display_url;
 
-        }
-        catch (error) {
-            console.log(error)
+
+             // user register
+             const result = await createUser(userEmail, userPass)
+             setUser(result.user)
+             await updateUserProfile(userName, image)
+             Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Successfully signed up",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            navigate('/')
+            
+        } catch (error) {
+            console.error("Image upload failed:", error);
+            setLoading(false)
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: { error },
+                footer: '<a href="#">Why do I have this issue?</a>'
+            });
         }
     }
 
+    useEffect(() => {
+        if (user ) {
+            navigate('/')
+        }
+    }, [navigate, user])
 
+    if (user) {
+        return
+    }
 
     return (
         <div className="px-8 py-3 lg:w-[35vw] mx-auto mt-5 border border-teal-800 shadow-2xl rounded-xl font-poppins">
@@ -132,9 +161,6 @@ const Register = () => {
                         name="confirmPass"
                         {...register("confirmPass", {
                             required: true,
-                            minLength: 6,
-                            maxLength: 20,
-                            pattern: /(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])/
                         })}
                         className="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring" />
                     {errors.confirmPass?.type === 'required' && <span className=" text-red-500">Confirm Password required *</span>}
