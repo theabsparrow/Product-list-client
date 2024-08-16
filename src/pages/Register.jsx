@@ -6,7 +6,8 @@ import { Link } from "react-router-dom";
 import UseAuth from "../hooks/UseAuth";
 import logo from '../../public/logo.png';
 import { FcGoogle } from "react-icons/fc";
-import { loadCaptchaEnginge, LoadCanvasTemplate, LoadCanvasTemplateNoReload, validateCaptcha } from 'react-simple-captcha';
+import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
+import axios from "axios";
 
 const Register = () => {
     const { register, handleSubmit, formState: { errors }, } = useForm();
@@ -14,7 +15,7 @@ const Register = () => {
     const [displayPass, setDisplayPass] = useState(false);
     const [displayConfirmPass, setDisplayConfirmPass] = useState(false);
     const [disable, setDisable] = useState(true);
-    const {loading} = UseAuth();
+    const { loading } = UseAuth();
     const [Captcha, setCaptcha] = useState('')
     const [errorCaptcha, setErrorCaptcha] = useState('')
 
@@ -45,7 +46,27 @@ const Register = () => {
         const userImage = data.image[0];
         const userPass = data.password;
 
-        console.log(userName, userEmail, userImage, userPass)
+        setErrorPass("")
+        if (data.password !== data.confirmPass) {
+            setErrorPass('password and confirm Password doesn`t match')
+            return
+        }
+
+        // console.log(userName, userEmail, userImage, userPass)
+        const formData = new FormData();
+        formData.append('image', userImage)
+
+        try {
+            const { data } = await axios.post(`
+                https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
+                formData
+            );
+            const image = data.data.display_url
+
+        }
+        catch (error) {
+            console.log(error)
+        }
     }
 
 
@@ -156,7 +177,7 @@ const Register = () => {
 
                 <div className="form-control mt-3">
                     <button
-                        disabled={ disable}
+                        disabled={disable}
                         type="submit"
                         className="btn bg-teal-800 hover:bg-yellow-500 duration-500 text-white text-lg">
                         {/* {loading ? <TbFidgetSpinner className="animate-spin m-auto"></TbFidgetSpinner> : "Sign up"} */}
