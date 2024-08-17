@@ -55,8 +55,8 @@ const Navbar = () => {
     }
     return (
         <div>
-            <div className="px-[20px] font-poppins hidden lg:block">
-                <div className="w-[300px] h-screen bg-teal-800 flex flex-col justify-between py-5">
+            <div className="px-[20px] font-poppins hidden lg:block sticky top-0 z-20">
+                <div className="w-[300px] h-screen bg-teal-800 flex flex-col justify-between py-5 rounded-b-xl">
 
                     <div className="px-2 space-y-3">
                         <Link to='/' className="flex items-center">

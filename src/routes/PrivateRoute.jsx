@@ -3,8 +3,7 @@ import UseAuth from "../hooks/UseAuth";
 import PropTypes from 'prop-types';
 
 const PrivateRoute = ({children}) => {
-    const { user, loading } = UseAuth()
-    console.log(loading)
+    const { user, loading } = UseAuth();
 
     if (loading) {
         return <div className="min-h-screen flex items-center justify-center">
