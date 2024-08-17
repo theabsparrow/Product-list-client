@@ -9,6 +9,7 @@ import { FcGoogle } from "react-icons/fc";
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
 import axios from "axios";
 import Swal from "sweetalert2";
+import { Helmet } from "react-helmet";
 
 const Register = () => {
     const { register, handleSubmit, formState: { errors }, } = useForm();
@@ -128,9 +129,9 @@ const Register = () => {
 
     return (
         <div className="px-8 py-3 lg:w-[35vw] mx-auto mt-5 border border-teal-800 shadow-2xl rounded-xl font-poppins">
-            {/* <Helmet>
-                <title>Sign Up || surveyAtlas</title>
-            </Helmet> */}
+             <Helmet>
+                <title>Register || Dune Shop</title>
+            </Helmet>
             <div className='flex items-center justify-center'>
                 <img className='w-[2vw]' src={logo} alt="" />
                 <h1 className='text-teal-800 text-4xl font-bold'>UNE SHOP</h1>

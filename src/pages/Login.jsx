@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from '../../public/logo.png'
 import UseAuth from "../hooks/UseAuth";
 import Swal from "sweetalert2";
+import { Helmet } from "react-helmet";
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -80,9 +81,9 @@ const Login = () => {
     return (
         <div className="min-h-[calc(100vh-466px)] px-4 lg:px-[70px] mt-4 mb-4 font-roboto">
 
-            {/* <Helmet>
-                <title>Login || Eternels</title>
-            </Helmet> */}
+            <Helmet>
+                <title>Login || Dune Shop</title>
+            </Helmet>
 
             <div className="flex justify-center">
                 <div className="md:w-[90vw] lg:w-[35vw] p-6 border-[1px] border-teal-800 shadow-2xl rounded-lg">
