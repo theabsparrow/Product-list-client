@@ -4,7 +4,6 @@ import { MdAddShoppingCart, MdOutlineNoteAdd } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import logo from '../../../public/logo.png'
 import { useEffect, useState } from "react";
-import { CgProfile } from "react-icons/cg";
 import { TbLogout2 } from "react-icons/tb";
 import NavMobile from "./NavMobile";
 import UseAuth from "../../hooks/UseAuth";
@@ -12,7 +11,7 @@ import Swal from "sweetalert2";
 
 const Navbar = () => {
     const [theme, setTheme] = useState(() => localStorage.getItem("userTheme") || "light");
-    const {logout, user} = UseAuth();
+    const { logout, user } = UseAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -31,7 +30,7 @@ const Navbar = () => {
         }
     }
 
-    const handleLogout = async() => {
+    const handleLogout = async () => {
         try {
             await logout()
             Swal.fire({
@@ -55,6 +54,14 @@ const Navbar = () => {
     }
     return (
         <div>
+            {!user ? <>
+                <div className="min-h-screen flex items-center justify-center">
+                    <span className="loading loading-bars loading-xs"></span>
+                    <span className="loading loading-bars loading-sm"></span>
+                    <span className="loading loading-bars loading-md"></span>
+                    <span className="loading loading-bars loading-lg"></span>
+                </div>
+            </> : <>
             <div className="px-[20px] font-poppins hidden lg:block sticky top-0 z-20">
                 <div className="w-[300px] h-screen bg-teal-800 flex flex-col justify-between py-5 rounded-b-xl">
 
@@ -89,6 +96,8 @@ const Navbar = () => {
 
                 </div>
             </div>
+            </>}
+            
 
             <div className="lg:hidden">
                 <NavMobile></NavMobile>

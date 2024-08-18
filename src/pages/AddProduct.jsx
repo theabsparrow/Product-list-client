@@ -3,12 +3,37 @@ import UseAuth from "../hooks/UseAuth";
 import axios from "axios";
 import { useState } from "react";
 import { ImGift } from "react-icons/im";
+import { useMutation } from "@tanstack/react-query";
+import UseAxiosSecure from "../hooks/UseAxiosSecure";
+import Swal from "sweetalert2";
 
 
 const AddProduct = () => {
-    const { setLoading } = UseAuth();
+    const { user } = UseAuth();
     const [imagePreview, setImagePreview] = useState();
     const [imageText, setImageText] = useState('Upload Image');
+    const axiossecure = UseAxiosSecure();
+
+
+    const { mutateAsync } = useMutation({
+        mutationFn: async (productData) => {
+            const { data } = await axiossecure.post(`/add-product`, productData)
+            return data;
+        },
+        onSuccess: () => {
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Product added successfully!",
+                showConfirmButton: false,
+                timer: 1500
+            });
+
+            setImagePreview(null);
+            setImageText('Upload Image');
+            document.getElementById('product-form').reset();
+        }
+    })
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -17,10 +42,12 @@ const AddProduct = () => {
         const image = form.image.files[0];
         const category = form.category.value;
         const brandName = form.brand.value;
-        const price = form.price.value;
+        const price = parseInt(form.price.value);
         const ratings = form.ratings.value;
         const description = form.describtion.value;
         const creationDateTime = new Date();
+        const userName = user.displayName;
+        const userEmail = user.email
 
 
         const formData = new FormData();
@@ -35,8 +62,10 @@ const AddProduct = () => {
             console.log(productImage)
 
             const productData = {
-                productName, productImage, description, price, category, brandName, ratings, creationDateTime
+                productName, productImage, description, price, category, brandName, ratings, creationDateTime, userName, userEmail
             }
+
+            await mutateAsync(productData)
 
         }
         catch (error) {
@@ -60,7 +89,7 @@ const AddProduct = () => {
                         <h1 className=" text-2xl font-semibold  capitalize sm:text-3xl ">Add a Product</h1>
                     </div>
 
-                    <form onSubmit={handleSubmit}>
+                    <form id="product-form" onSubmit={handleSubmit}>
 
                         <div className="flex flex-col lg:flex-row lg:items-center justify-between mt-6">
                             <div className="flex flex-col lg:w-[49%]">
@@ -83,14 +112,14 @@ const AddProduct = () => {
                                             />
                                             <div className='bg-teal-800 text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-yellow-500 duration-500'>
                                                 {
-                                                    imageText.length > 15 ? imageText.split('.')[0].slice(0,15) + '...' + imageText.split('.')[1] : imageText
+                                                    imageText.length > 15 ? imageText.split('.')[0].slice(0, 15) + '...' + imageText.split('.')[1] : imageText
                                                 }
                                             </div>
                                         </label>
                                     </div>
                                 </div>
                                 <div className=" border">
-                                    {imagePreview && <img className="h-[17vh] w-[5vw]" src={imagePreview} />}
+                                    {imagePreview && <img className="h-[10vh] w-[15vw] lg:h-[10vh] lg:w-[8vw]" src={imagePreview} />}
                                 </div>
                             </div>
                         </div>

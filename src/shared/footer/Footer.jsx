@@ -7,7 +7,7 @@ const Footer = () => {
         <div className="mt-10">
             <footer className="footer footer-center bg-teal-800 text-primary-content p-10">
                 <aside>
-                    <img className='w-[5vw]' src={logo} alt="logo" />
+                    <img className='w-[10vw] lg:w-[5vw]' src={logo} alt="logo" />
                     <p className="font-bold">
                         Dune Shop
                         <br />

@@ -29,7 +29,7 @@ const Home = () => {
 
     }
     // call the products 
-    const { products, isLoading, refetch } = UseAllProducts(
+    const { products } = UseAllProducts(
         itemsPerPage,
         currentPage,
         sortPrice,
@@ -43,11 +43,11 @@ const Home = () => {
 
     useEffect(() => {
         const getCount = async () => {
-            const { data } = await axiossecure.get(`/products-count?filterBrand=${filterBrand}&search=${search}&minPrice=${minPrice}&maxPrice=${maxPrice}`)
+            const { data } = await axiossecure.get(`/products-count?filterBrand=${filterBrand}&search=${search}&minPrice=${minPrice}&maxPrice=${maxPrice}&filterCategory=${filterCategory}`)
             setCount(data.count)
         }
         getCount()
-    }, [axiossecure, filterBrand, search, minPrice, maxPrice])
+    }, [axiossecure, filterBrand, search, minPrice, maxPrice,filterCategory])
 
 
 
