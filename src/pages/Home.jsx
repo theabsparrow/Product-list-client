@@ -63,7 +63,7 @@ const Home = () => {
              <Helmet>
                 <title>Products || Dune Shop</title>
             </Helmet>
-            <div className="bg-teal-800 h-[340px] lg:h-[250px] min-w-[calc(100vw-400px)] sticky top-0 z-10 rounded-b-xl px-5 lg:pt-3">
+            <div className="bg-teal-800 h-[340px] lg:h-[250px] w-[calc(100vw-400px)] sticky top-0 z-10 rounded-b-xl px-5 lg:pt-3">
                 <div className="lg:flex items-center gap-16 hidden">
                     <h1 className="text-xl font-semibold text-white">Total Product: {products.length}</h1>
                     <h1 className=" text-3xl text-white font-semibold">Find your product easily by filtering</h1>
